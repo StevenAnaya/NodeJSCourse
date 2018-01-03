@@ -1,0 +1,27 @@
+{
+  "name": "platziverse-db",
+  "version": "1.0.0",
+  "description": "A Simple IoT Platform - DB Module",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StevenAnaya/NodeJSCourse.git"
+  },
+  "author": "StevenAnaya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StevenAnaya/NodeJSCourse/issues"
+  },
+  "homepage": "https://github.com/StevenAnaya/NodeJSCourse#readme",
+  "devDependencies": {
+    "standard": "^10.0.3"
+  },
+  "dependencies": {
+    "pg": "^7.4.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.28.6"
+  }
+}
