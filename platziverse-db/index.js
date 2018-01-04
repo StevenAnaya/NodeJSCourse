@@ -3,8 +3,22 @@
 const setupDatabase = require('./lib/db')
 const setupAgentModel = require('./models/agent')
 const setupMetricModel = require('./models/metric')
+const defaults = require('defaults')
 
 module.exports = async function (config) {
+  config = defaults(config, {
+    dialect: 'sqlite',
+    pool: {
+      max: 10,
+      min: 0,
+      idle: 10000
+    },
+    query: {
+      raw: true
+    },
+    operatorsAliases: false
+  })
+
   const sequelize = setupDatabase(config)
   const AgentModel = setupAgentModel(config)
   const MetricModel = setupMetricModel(config)
@@ -17,6 +31,12 @@ module.exports = async function (config) {
   // Ahora vamos a comprobar que si nos estemos conectando a la base de datos con una funcion de sequelize
   // Esta lo que hace es hacer un query sencillo pero retorna una promesa, la resolvemos con await y luego sigue
   await sequelize.authenticate()
+
+  // Aca lo que vamos  a hacer es que si la propieded de setup esta true, configure de nuevo la base
+  // de datos y lo que hace es borrarla.
+  if (config.setup) {
+    await sequelize.sync({ force: true })
+  }
 
   const Agent = {}
   const Metric = {}
