@@ -67,23 +67,23 @@ test.beforeEach(async () => {
   }
 
   // ACa vamos a crear la funcion de findById ya que el agentModel que enviamos es un Stub, entonces
-  // lo vamos a actualizar con la nueva funcion y ademas no le vamos aponer la funcion de sinon spy si no la 
+  // lo vamos a actualizar con la nueva funcion y ademas no le vamos aponer la funcion de sinon spy si no la
   // funcion Stub para que cree la funcion y que este ya no este vacio
   AgentStub.findById = sandbox.stub()
-  // Si corremos el test este va a seguir fallando por que el stub sigue estando vacio, para que podamos devolver algo 
+  // Si corremos el test este va a seguir fallando por que el stub sigue estando vacio, para que podamos devolver algo
   // cuando hagamos el llamado de esta funcion vamos a hacer uso de la funcion withArg de sinon y ademas de returns para
   // devolver un valor cuando esta se llame
   AgentStub.findById.withArgs(id).returns(Promise.resolve(agentFixtures.byId(id)))
 
   // Model findOne Stub
   // Aca hacemos un proceso similar al anterior pero solo es que este lo usamos para probar la funcion de createOrUpdate,
-  // aca usamos tambien los fixtures pero con la diferencia que aca vamos a buscar un modelo por uuid. TAmbien este 
+  // aca usamos tambien los fixtures pero con la diferencia que aca vamos a buscar un modelo por uuid. TAmbien este
   // nos recibe un parametro uuidArgs que sera el objeto de consulta donde tenemos el where
   AgentStub.findOne = sandbox.stub()
   AgentStub.findOne.withArgs(uuidArgs).returns(Promise.resolve(agentFixtures.byUuid(uuid)))
 
   // Model Update Stub
-  // Aca repetimos el modelo anterior solo que esta vez le pasamos el Agente single que tenemos de los fixtures y la 
+  // Aca repetimos el modelo anterior solo que esta vez le pasamos el Agente single que tenemos de los fixtures y la
   // condicion donde tenemos el where y este nos deberia retornar el mismo objeto single
   AgentStub.update = sandbox.stub()
   AgentStub.update.withArgs(single, uuidArgs).returns(Promise.resolve(single))
@@ -93,7 +93,7 @@ test.beforeEach(async () => {
   AgentStub.create.withArgs(newAgent).returns(Promise.resolve({
     toJSON () { return newAgent }
   }))
-  
+
   // Model findAll Stub
   AgentStub.findAll = sandbox.stub()
   AgentStub.findAll.withArgs().returns(Promise.resolve(agentFixtures.all))
@@ -132,7 +132,7 @@ test.serial('Agent#findById', async t => {
   // Aca usamos para el test el Stub y el mock que creamos para el objeto del Modelo del agente, este no se conecta
   // al modelo real de base de datos
   let agent = await db.Agent.findById(id)
-  // Aca lo que hacemos es que nos aseguramos que la funcion de nuestro modelo Agente si sea llamada y ademas que sea solo 
+  // Aca lo que hacemos es que nos aseguramos que la funcion de nuestro modelo Agente si sea llamada y ademas que sea solo
   // llamada una vez
   t.true(AgentStub.findById.called, 'findById should be called on model')
   t.true(AgentStub.findById.calledOnce, 'findById should be called once')
