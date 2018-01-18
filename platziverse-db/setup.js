@@ -4,6 +4,7 @@ const debug = require('debug')('platziverse:db:setup')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 const db = require('./')
+const config = require('./config-db')
 // Creamos la instancioa del prompt para poder mostrar los mensajes por la pantalla
 const prompt = inquirer.createPromptModule()
 let autConfig = false
@@ -15,7 +16,7 @@ process.argv.find((arg) => {
 })
 
 async function setup () {
-  const config = configSetup()
+  // const config = configSetup()
 
   if (!autConfig) {
     // Ahora a la funcion prompt que instanciamos le pasamos por parametro la configuracion que le queremo
@@ -48,22 +49,5 @@ function handleFatalError (err) {
   console.error(`${chalk.red('[faltal error]')} ${err.message}`)
   console.error(err.stack)
   process.exit(1)
-}
-function configSetup () {
-  return {
-    database: process.env.DB_NAME || 'platziverse',
-    username: process.env.DB_USER || 'steven',
-    password: process.env.DB_PASS || 'zanahoria19',
-    host: process.env.DB_HOST || 'localhost',
-    dialect: 'postgres',
-    // Este atributo sirve para mostrar mensaje de logs, este recibe una funcion, en este caso usamos el
-    // modulo de debug
-    logging: s => debug(s),
-    // Esta linea es para corregir el error que nos arroja cuando corremos el script de setup
-    operatorsAliases: false,
-    // Esta propiedad de setup la vamos a usar para que cuando este en true este borre la base de dato
-    // y cree una nueva. Hay que tener cuidado con este
-    setup: true
-  }
 }
 setup()
