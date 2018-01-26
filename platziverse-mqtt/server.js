@@ -7,7 +7,7 @@ const chalk = require('chalk')
 const db = require('platziverse-db')
 const config = require('../platziverse-db/config-db.js')
 
-const { parsePayload } = require('./utils')
+const { parsePayload } = require('../platziverse-utils/utils')
 // Aca configuramos el objeto backend que queremos pasar, le decimos el tipo que sera, ademas le pasamos la
 // instancia de de redis que obtenemos y luego le decimos que retorne los buffer ya que es mas facil
 // procesar los datos ya que los buffers los entregan en binario
