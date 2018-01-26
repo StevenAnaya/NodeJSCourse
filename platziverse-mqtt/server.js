@@ -100,7 +100,7 @@ server.on('published', async (packet, client) => {
         // de mqtt con el metodo publish, y como este nos recibe la informacion en string, tenemos que convertirlo a string
         // con el metodo JSON.stringify
         if (!clients.get(client.id)) {
-          client.set(client.id, agent)
+          clients.set(client.id, agent)
           server.publish({
             topic: 'agent/connected',
             payload: JSON.stringify({
@@ -115,16 +115,10 @@ server.on('published', async (packet, client) => {
           })
         }
         // Store Metrics
-        for (let metric of payload.metrics) {
-          let m
-
-          try {
-            m = await Metric.create(agent.uuid, metric)
-          } catch (err) {
-            return handleFatalError(err)
-          }
-
-          debug(`Metric ${m.id} saved on agent ${agent.uuid}`)
+        try {
+          await Promise.all(payload.metrics.map(metric => Metric.create(agent.uuid, metric)))
+        } catch (err) {
+          return handleError(err)
         }
       }
       break
