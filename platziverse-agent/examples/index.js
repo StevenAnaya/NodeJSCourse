@@ -1,9 +1,6 @@
-# platziverse-agent
+'use strict'
 
-## Usage
-
-``` js
-const PlatziverseAgent = require('platiziverse-agent')
+const PlatziverseAgent = require('../')
 
 const agent = new PlatziverseAgent({
   interval: 2000,
@@ -31,12 +28,13 @@ agent.connect()
 agent.on('connected', handler)
 agent.on('disconnected', handler)
 agent.on('message', handler)
+// Other Agents
+agent.on('agent/connected', handler)
+agent.on('agent/disconnected', handler)
+agent.on('agent/message', handler)
 
-agent.on('agent/connected')
-agent.on('agent/disconnected')
-agent.on('agent/message', payload => {
+function handler (payload) {
   console.log(payload)
-})
+}
 
-setTimeout(() => agent.disconnect(), 20000)
-```
+setTimeout(() => agent.disconnect(), 10000)
