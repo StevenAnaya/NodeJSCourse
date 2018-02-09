@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "standard",
     "start-dev": "DEBUG=platziverse:* nodemon server.js",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production node server.js",
+    "test": "DEBUG=platziverse:* ava tests/ --verbose"
   },
   "repository": {
     "type": "git",
@@ -20,12 +21,16 @@
   },
   "homepage": "https://github.com/StevenAnaya/NodeJSCourse#readme",
   "devDependencies": {
+    "ava": "^0.25.0",
     "nodemon": "^1.14.12",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "chalk": "^2.3.0",
     "debug": "^3.1.0",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "express-asyncify": "^1.0.0",
+    "platziverse-db": "file:../platziverse-db"
   }
 }

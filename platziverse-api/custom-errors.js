@@ -5,13 +5,13 @@ class AgentNotFound extends Error {
     super(givenUuid)
 
     this.code = 404
-    this.nameError = 'AgentNotFoundERROR' 
+    this.nameError = 'AgentNotFoundERROR'
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, AgentNotFound)
     }
 
-    this.message = `Agent with ${givenUuid} not found`
+    this.message = (givenUuid) ? `Agent with ${givenUuid} not found` : 'not found agents connected'
   }
 }
 
@@ -39,7 +39,7 @@ class NoAuthenticated extends Error {
     this.code = 401
     this.givenUuid = givenUuid
     this.nameError = 'AuthenticatedERROR'
-    
+
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, NoAuthenticated)
     }
