@@ -10,14 +10,13 @@ const prompt = inquirer.createPromptModule()
 let autConfig = false
 
 process.argv.find((arg) => {
-  if (arg === '-y' || arg === '-yes') {
+  if (arg === "-y" || arg === "-yes") {
     autConfig = true
   }
 })
 
-async function setup () {
+async function setup (config) {
   // const config = configSetup()
-
   if (!autConfig) {
     // Ahora a la funcion prompt que instanciamos le pasamos por parametro la configuracion que le queremo
     // dar a esta confirmacion.

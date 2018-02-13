@@ -1,7 +1,7 @@
 'use strict'
 const debug = require('debug')('platziverse:db:setup')
 
-module.exports = function configDb (setup = true) {
+module.exports = function configDb () {
   return {
     database: process.env.DB_NAME || 'platziverse',
     username: process.env.DB_USER || 'steven',
@@ -10,6 +10,6 @@ module.exports = function configDb (setup = true) {
     dialect: 'postgres',
     logging: s => debug(s),
     operatorsAliases: false,
-    setup: true
+    setup: false
   }
 }
