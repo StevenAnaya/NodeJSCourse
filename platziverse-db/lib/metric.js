@@ -12,7 +12,10 @@ module.exports = function setupMetric (MetricModel, AgentModel) {
       group: [ 'type' ],
       include: [{
         attributes: [],
-        model: AgentModel
+        model: AgentModel,
+        where: {
+          uuid
+        }
       }],
       raw: true
     })

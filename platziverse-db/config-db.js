@@ -10,6 +10,6 @@ module.exports = function configDb (setup = true) {
     dialect: 'postgres',
     logging: s => debug(s),
     operatorsAliases: false,
-    setup
+    setup: true
   }
 }
