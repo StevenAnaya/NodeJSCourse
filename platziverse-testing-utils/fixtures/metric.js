@@ -1,7 +1,7 @@
 'use strict'
 
 const agentFixtures = require('./agent')
-const utils = require('../../utils')
+const utils = require('../sort-utils/index')
 
 const extend = utils.extend
 
@@ -31,7 +31,7 @@ function findByAgentUuid (uuid) {
   })
 }
 
-function findByTypeAgentUuid (type, uuid) {
+function findByTypeAgentUuid (uuid, type) {
   return metrics.filter(m => m.type === type && (m.agent ? m.agent.uuid === uuid : false)).map(m => {
     const clone = Object.assign({}, m)
 
