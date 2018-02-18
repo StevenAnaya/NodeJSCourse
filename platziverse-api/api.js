@@ -4,6 +4,7 @@ const debug = require('debug')('platziverse:api:routes')
 const express = require('express')
 const asyncify = require('express-asyncify')
 const db = require('platziverse-db')
+const auth = require('express-jwt')
 const { AgentNotFound, MetricsNotFound, NoAuthenticated, NoAuthorized } = require('./custom-errors')
 
 const config = require('./config')
@@ -30,14 +31,24 @@ api.use('*', async (req, res, next) => {
   }
   next()
 })
-
-api.get('/agents', async (req, res, next) => {
+// Vamos a usar el modulo de jwt como middleware para autenticar las rutas de nuestra API
+api.get('/agents', auth(config.auth),async (req, res, next) => {
   debug('a request has come to /agents')
+  // El middleware de express-jwt es el que nos setea res.user para poder usado despues 
+  // en el middleware
+  const { user } = req
+
+  if (!user || !user.username) {
+    return next(new NoAuthorized())
+  }
 
   let agents = []
-
   try {
-    agents = await Agent.findConnected()
+    if (user.admin){
+      agents = await Agent.findConnected()
+    } else {
+      agents = await Agent.findByUsername(user.username)
+    }
   } catch (e) {
     return next(new AgentNotFound())
   }

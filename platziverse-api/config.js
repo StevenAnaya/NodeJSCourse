@@ -11,5 +11,8 @@ module.exports = {
     dialect: 'postgres',
     logging: s => debug(s),
     operatorsAliases: false
+  },
+  auth: {
+    secret: process.env.SECRET || 'platzi'
   }
 }
