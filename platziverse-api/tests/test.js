@@ -5,18 +5,26 @@ const test = require('ava')
 const request = require('supertest')
 const sinon = require('sinon')
 const proxy = require('proxyquire')
+const util = require('util')
+const config = require('../config')
 
 let sandbox = null
 let server = null
 let dbStub = null
+let token = null
 let AgentStub = {}
 let MetricStub = {}
 let agentUuid = 'yyy-yyy-yyy'
 let wrongAgentUuid = 'aaa-aaa-aaa'
 let typeMetric = 'CPU'
+let wrongToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0dmVuIiwiaWF0IjoxNTE4OTg5NDIzfQ.laaKrU-XYaZoJrRRmg8_c'
 
 const agentFixtures = require('../../platziverse-testing-utils/fixtures/agent')
 const metricsFixtures = require('../../platziverse-testing-utils/fixtures/metric')
+const auth = require('../auth')
+// Lo que hacemos es volver la funcion de auth que nos recibe callback en una funcion asincrona,
+// usando el modulo de node promisify
+const sign = util.promisify(auth.sign)
 
 test.beforeEach(async () => {
   sandbox = sinon.sandbox.create()
@@ -43,6 +51,8 @@ test.beforeEach(async () => {
   MetricStub.findByTypeAgentUuid = sandbox.stub()
   MetricStub.findByTypeAgentUuid.withArgs(agentUuid, typeMetric).returns(Promise.resolve(metricsFixtures.findByTypeAgentUuid(agentUuid, typeMetric)))
   MetricStub.findByTypeAgentUuid.withArgs(wrongAgentUuid, typeMetric).returns(Promise.resolve(null))
+
+  token = await sign({ admin: true, username: 'platzi' }, config.auth.secret)
 
   // Aqui lo que hacemos es usar proxyquire para que cuando hagan los llamados al los requires que tenemos en el archivo principal 
   // del api, entregue los stubs que nosotros hicimos. en este caso entregaria el stub de la base de datos, que contendria 
@@ -71,6 +81,7 @@ test.serial.cb('/api/agents', t => {
   // ningun error y luego con deepEqual validamos que sea igual la respuesta, por ultimo se usa t.end() solo
   // cuando usamos test con callbacks
     .get('/api/agents')
+    .set('Authorization', `Bearer ${token}`)
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {
@@ -82,9 +93,22 @@ test.serial.cb('/api/agents', t => {
     })
 })
 
+test.serial.cb('/api/agents - wrong JWT', t => {
+  request(server)
+  .get('/api/agents')
+  .set('Authorization', `Bearer ${wrongToken}`)
+  .expect(401)
+  .expect('Content-Type', /json/)
+  .end((err, res) => {
+    t.truthy(err, 'Should return an error')
+    t.end()
+  })
+})
+
 test.serial.cb('/api/agent/:uuid', t => {
   request(server)
   .get(`/api/agent/${agentUuid}`)
+  .set('Authorization', `Bearer ${token}`)
   .expect(200)
   .expect('Content-Type', /json/)
   .end((err, res) => {
@@ -99,6 +123,7 @@ test.serial.cb('/api/agent/:uuid', t => {
 test.serial.cb('/api/agent/:uuid not found', t => {
   request(server)
   .get(`/api/agent/${wrongAgentUuid}`)
+  .set('Authorization', `Bearer ${token}`)  
   .expect(404)
   .expect('Content-type', /json/)
   .end((err,res) => {
@@ -112,9 +137,22 @@ test.serial.cb('/api/agent/:uuid not found', t => {
   })
 })
 
+test.serial.cb('/api/agent/:uuid - wrong JWT', t => {
+  request(server)
+  .get(`/api/agent/${agentUuid}`)
+  .set('Authorization', `Bearer ${wrongToken}`)
+  .expect(401)
+  .expect('Content-Type', /json/)
+  .end((err, res) => {
+    t.truthy(err, 'Should return an error')
+    t.end()
+  })
+})
+
 test.serial.cb('/api/metrics/:uuid', t => {
   request(server)
   .get(`/api/metrics/${agentUuid}`)
+  .set('Authorization', `Bearer ${token}`)  
   .expect(200)
   .expect('Content-type', /json/)
   .end((err, res) => {
@@ -129,6 +167,7 @@ test.serial.cb('/api/metrics/:uuid', t => {
 test.serial.cb('/api/metrics/:uuid - not found', t => {
   request(server)
   .get(`/api/metrics/${wrongAgentUuid}`)
+  .set('Authorization', `Bearer ${token}`)
   .expect(404)
   .expect('Content-type', /json/)
   .end((err, res) => {
@@ -141,9 +180,22 @@ test.serial.cb('/api/metrics/:uuid - not found', t => {
   })
 })
 
+test.serial.cb('/api/metrics/:uuid - wrong JWT', t => {
+  request(server)
+  .get(`/api/metrics/${agentUuid}`)
+  .set('Authorization', `Bearer ${wrongToken}`)
+  .expect(401)
+  .expect('Content-Type', /json/)
+  .end((err, res) => {
+    t.truthy(err, 'Should return an error')
+    t.end()
+  })
+})
+
 test.serial.cb('/api/metrics/:uuid/:type', t => {
   request(server)
   .get(`/api/metrics/${agentUuid}/${typeMetric}`)
+  .set('Authorization', `Bearer ${token}`)
   .expect(200)
   .expect('Content-type', /json/)
   .end((err, res) => {
@@ -158,6 +210,7 @@ test.serial.cb('/api/metrics/:uuid/:type', t => {
 test.serial.cb('/api/metrics/:uuid/:type - not found', t => {
   request(server)
   .get(`/api/metrics/${wrongAgentUuid}/${typeMetric}`)
+  .set('Authorization', `Bearer ${token}`)
   .expect(404)
   .expect('Content-type', /json/)
   .end((err, res) => {
@@ -166,6 +219,18 @@ test.serial.cb('/api/metrics/:uuid/:type - not found', t => {
     }
     t.truthy(res.body.error, 'should be return an error')
     t.regex(res.body.error, /not found/, 'should contain an not found error')
+    t.end()
+  })
+})
+
+test.serial.cb('/api/metrics/:uuid/:type - wrong JWT', t => {
+  request(server)
+  .get(`/api/metrics/${agentUuid}/${typeMetric}`)
+  .set('Authorization', `Bearer ${wrongToken}`)
+  .expect(401)
+  .expect('Content-Type', /json/)
+  .end((err, res) => {
+    t.truthy(err, 'Should return an error')
     t.end()
   })
 })

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Platziverse</title>
+  <!-- Esta ruta es la que nos hace Express y socketio, no la tenemos que crear ni nada -->
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>Platziverse</h1>
+  <script type="text/javascript">
+    var socket = io()
+    // Este es el evento que recibe nuestro frontend del servidor
+    socket.on('agent/message', function (payload) {
+      console.log(payload)
+    })
+
+    setTimeout(function () {
+      socket.emit('agent/message', 'hello server!')
+    }, 5000)
+  </script>
+</body>
+</html>
