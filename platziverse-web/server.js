@@ -38,7 +38,7 @@ app.use('/', proxy)
 app.use((err, req, res, next) => {
   debug(`Error: ${err.message}`)
 
-  res.status(err.code).send({ name: err.nameError, error: err.message })
+  res.send({ name: err.nameError, error: err.message })
 })
 
 // Socket.io Web Sockets
