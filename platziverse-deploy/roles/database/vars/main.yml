@@ -1,0 +1,21 @@
+postgresql_database:
+    # el nombre de la base de datos
+  - name: platziverse
+    # El usuario que la va a manejar
+    owner: platzi
+    # Es una manera de usar llave/valor mas avanzada que usa postgres
+    hstore: yes
+postgresql_users:
+    # nombre del usuario
+  - name: platzi
+    # contrasena que vamos a usar
+    pass: platzi
+    # si es encriptada le decimos yes para que la interprete
+    encrypted: no
+postgresql_user_privileges:
+    # Nombre del usuario al que queremos dar privilegios
+  - name: platzi
+    # A que db le vamos a dar privilegios
+    db: platziverse
+    # que tipos de permisos le vamos a dar
+    priv: "ALL"

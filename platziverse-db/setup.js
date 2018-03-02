@@ -7,17 +7,14 @@ const db = require('./')
 const config = require('./config-db')
 // Creamos la instancioa del prompt para poder mostrar los mensajes por la pantalla
 const prompt = inquirer.createPromptModule()
+const minimist = require('minimist')
 let autConfig = false
 
-process.argv.find((arg) => {
-  if (arg === "-y" || arg === "-yes") {
-    autConfig = true
-  }
-})
+let argv = minimist(process.argv)
 
 async function setup (config) {
-  // const config = configSetup()
-  if (!autConfig) {
+
+  if (!argv.yes) {
     // Ahora a la funcion prompt que instanciamos le pasamos por parametro la configuracion que le queremo
     // dar a esta confirmacion.
     const answer = await prompt([
