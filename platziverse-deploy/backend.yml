@@ -1,0 +1,16 @@
+---
+# Escribimos en que servidores o hosts vamos a correr este rol
+- hosts: backend-*
+  # Le pasamos algunos parametros para que instale dependencias que necesita ansible para correr
+  gather_facts: False
+  # Creamos pre tareas para que ese ejecuten antes de que arranque la config de la base de datos
+  pre_tasks:
+    # Le damos un nombre
+    - name: Install Python 2
+      # Vamos primero verificar si existe python, sino, instalamos una version pequenia de python
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      # luego le decimos que configure python
+    - setup:
+  # Por ultimo ponemos todos los roles que vamos a ejecutar despues de este
+  roles:
+    - database

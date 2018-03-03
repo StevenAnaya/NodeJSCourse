@@ -1,4 +1,4 @@
-postgresql_database:
+postgresql_databases:
     # el nombre de la base de datos
   - name: platziverse
     # El usuario que la va a manejar

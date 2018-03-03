@@ -4,10 +4,11 @@
   # ejecuta el servicio segun el SO
   service:
     # Decimos le nombre del servicio que tiene que escuchar o que tiene que reiniciar
-    name=postgresql
+    name: postgresql
     # le decimos lo que va a hacer. lo va a recargar y a reconfigurar con las variables que seteamos
-    state=reloaded
+    state: reloaded
 - name: Restarting Redis
-    name=redis
+  service:
+    name: redis
     # aca solo reiniciamos el servicio ya que no configuramos ninguna variable para redis
-    state=restarted
+    state: restarted
