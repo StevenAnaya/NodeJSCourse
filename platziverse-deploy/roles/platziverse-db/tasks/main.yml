@@ -1,0 +1,27 @@
+---
+# vamos a incluir el archivo de dependecias del sistema operativo que creamos 
+- include: deps.yml
+- name: Copy platziverse-db
+  # Usamos el modulo de copy para copiar archivos en nuestro servidor
+  copy: 
+    # Le pasamos la ruta en la que esta nuestro codigo fuente
+    src: platziverse-db
+    # Le indicamos el destino de los archivos. en este caso se pone en el directorio de usr 
+    dest: /usr/local/src
+    # Le asignamos los permisos para cada uno de los usuarios que van a acceder al sistema operativo
+    mode: u=rwx,g=rwx,o=rx
+- name: Run npm install 
+  # Corremos el comando npm install para poder instalar las dependencias del modulo de base de datos
+  command: npm install
+  args:
+    # le decimos que ejecute el comando dentro de la carpeta donde tenemos nuestero codigo fuente
+    chdir: /usr/local/src/platziverse-db
+    # # Le decimos que deberia crear la carpeta node_modules luego de ejecutar el comando de npm install
+    creates: /usr/local/src/platziverse-db/node_modules
+- name: Setup Database
+  # Corremos el comando para configurar la base de datos. Ademas aca usamos los flags que habiamos creado 
+  # para poder hacer la instalacion de una vez
+  command: npm run setup -- --yes args
+  args:
+    # Le indicamos la ruta en la que debe ejecutar el comando
+    chdir: /usr/local/src/platziverse-db

@@ -14,3 +14,4 @@
   # Por ultimo ponemos todos los roles que vamos a ejecutar despues de este
   roles:
     - database
+    - platziverse-mqtt

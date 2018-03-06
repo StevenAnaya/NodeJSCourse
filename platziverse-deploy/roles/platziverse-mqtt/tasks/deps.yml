@@ -1,0 +1,7 @@
+--- 
+# Usamos apt primero para que garantice que en el SO este instalado git o que este presente, esto para 
+# que las dependecias o los modulos que usan github para descargar puedan servir
+- apt: name=git state=present
+# Le decimos que debe tener instalado el paquete build-essential de linux que nos permite instalar 
+# paquetes binarios nativos dentro del sistema operativo
+- apt: name=build-essential state=present

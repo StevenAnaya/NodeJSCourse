@@ -1,0 +1,25 @@
+---
+# En este script vamos a bajar el paquete de binarios que nos entrega nodesource para instalar en SO basados en 
+# Linux
+- name: Downloading setup script
+  # Usamos el metodo get_url de ansible para hacer la peticion al servidor de nodesource
+  get_url:
+    url: https://deb.nodesource.com/setup_8.x
+    # le indicamos la carpeta de destino de la descarga
+    dest: /tmp/install_node_8.sh
+    # Le damos los permisos a cada tipo de usuario del sistema operativo
+    mode: u=rx,g=rx,o=rx
+- name: Running Setup Script
+  # Usamos este metodo para poder correr un comando en el sistema operativo
+  command: /tmp/install_node_8.sh creates=/etc/apt/sources.list.d/nodesource_8.list
+    # Este creates nos sirve para que cuando el comando este instalado no lo vuelva a instalar en 
+    # otros roles siguientes
+- name: Installing Node.js
+  # Hacemos uso del modulo de apt para instalar los paquetes de node
+  apt:
+    # le decimos que use apt update para que actualice todos los repositorios de node
+    update_cache: yes
+    # Para que traiga la ultima version de node
+    state: latest
+    # le decimos el nombre del paquete que vaya a instalar
+    name: nodejs

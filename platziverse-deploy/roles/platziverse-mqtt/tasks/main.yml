@@ -1,0 +1,35 @@
+---
+- include: deps.yml
+- name: Copy platziverse-mqtt
+  copy:
+    # Le decimos que copie el codigo fuente de la carpeta que tenemos aca
+    src: platziverse-mqtt
+    # Le decimos el destino del codigo dentro del sistema operativo del servidor
+    dest: /usr/local/src
+    # le seteamos los permisos  a esa carpeta
+    mode: u=rwx,g=rwx,o=rx
+- name: Running npm install
+  # Instalamos todas las dependencias del modulo de mqtt
+  command: npm install
+  args: 
+    # Le decimos en que lugar tiene que ejecutar ese comando
+    chdir: /usr/local/src/platziverse-mqtt
+    # Tiene que haber creado una carpeta de node_modules
+    creates: /usr/local/src/platziverse-mqtt/node_modules
+- name: Install systemd script
+  # ESte script es para copiar el archivo del servicio de systemD en nuestro servidor
+  copy:
+    src: platziverse-mqtt.services
+    dest: /lib/systemd/system
+- name: Run mqtt server
+  command: npm run start
+  args:
+    chdir: /usr/local/src/platziverse-mqtt
+- name: Start platziverse-mqtt
+  service:
+    # Le decimos el nombre del servicio que tiene que levantar
+    name: platziverse-mqtt
+    # quiero que el servicio si esta corriendo, lo reinicie sino, que lo inicie
+    state: restarted
+    # le decimos que arranque el servicio automaticamente cuando inicie el servidor
+    enabled: yes
