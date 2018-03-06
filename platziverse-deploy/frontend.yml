@@ -1,6 +1,6 @@
 ---
 # Escribimos en que servidores o hosts vamos a correr este rol
-- hosts: backend-*
+- hosts: frontend-*
   # Le pasamos algunos parametros para que instale dependencias que necesita ansible para correr
   gather_facts: False
   # Creamos pre tareas para que ese ejecuten antes de que arranque la config de la base de datos
@@ -13,6 +13,4 @@
     - setup:
   # Por ultimo ponemos todos los roles que vamos a ejecutar despues de este
   roles:
-    - database
-    - platziverse-mqtt
-    - platziverse-api
+    - platziverse-web

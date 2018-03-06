@@ -1,0 +1,21 @@
+---
+# vamos a incluir el archivo de dependecias del sistema operativo que creamos 
+- include: deps.yml
+- name: Copy platziverse-agent
+  # Usamos el modulo de copy para copiar archivos en nuestro servidor
+  copy: 
+    # Le pasamos la ruta en la que esta nuestro codigo fuente
+    src: platziverse-agent
+    # Le indicamos el destino de los archivos. en este caso se pone en el directorio de usr 
+    dest: /usr/local/src
+    # Le asignamos los permisos para cada uno de los usuarios que van a acceder al sistema operativo
+    mode: u=rwx,g=rwx,o=rx
+- name: Run npm install 
+  # Corremos el comando npm install para poder instalar las dependencias del modulo de base de datos
+  command: npm install
+  args:
+    # le decimos que ejecute el comando dentro de la carpeta donde tenemos nuestero codigo fuente
+    chdir: /usr/local/src/platziverse-agent
+    # # Le decimos que deberia crear la carpeta node_modules luego de ejecutar el comando de npm install
+    creates: /usr/local/src/platziverse-agent/node_modules
+

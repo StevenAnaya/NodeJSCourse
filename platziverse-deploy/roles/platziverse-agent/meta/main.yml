@@ -1,0 +1,4 @@
+---
+# Le vamos a configurar las dependencias para poder correr el script de base de datos
+dependencies:
+  - { role: node }

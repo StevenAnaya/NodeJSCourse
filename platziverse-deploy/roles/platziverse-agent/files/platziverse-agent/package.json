@@ -1,0 +1,29 @@
+{
+  "name": "platziverse-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "lint": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StevenAnaya/NodeJSCourse.git"
+  },
+  "author": "StevenAnaya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StevenAnaya/NodeJSCourse/issues"
+  },
+  "homepage": "https://github.com/StevenAnaya/NodeJSCourse#readme",
+  "devDependencies": {
+    "standard": "^10.0.3"
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "defaults": "^1.0.3",
+    "mqtt": "^2.15.1",
+    "uuid": "^3.2.1"
+  }
+}
